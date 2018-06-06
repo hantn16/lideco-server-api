@@ -15,10 +15,10 @@ var apiRoutes = require('./server/routes/api.routes');
 
 var app = express();
 
-// // view engine setup
-// app.set('views', path.join(__dirname, 'public/mean-stack-angularcli'));
-// app.set('view engine', 'html');
-// app.engine('html', require('hbs').__express);
+// view engine setup
+app.set('views', path.join(__dirname, 'public'));
+app.set('view engine', 'html');
+app.engine('html', require('hbs').__express);
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -41,7 +41,7 @@ app.use('/api', apiRoutes);
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/mean-stack-angularcli/index.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 module.exports = app;
