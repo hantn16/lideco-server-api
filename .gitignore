@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-/public/uploads
 
 # IDEs and editors
 /.idea
