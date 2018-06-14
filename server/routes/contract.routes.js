@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('../db/mongoose');
-const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 const Contract = require('../models/contract');
 const _ = require('lodash');
 const {authenticate} = require('../middleware/authenticate');
+const mongoose = require('../db/mongoose');
 
 //POST /contracts
 

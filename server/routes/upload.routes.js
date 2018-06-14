@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
-const multer = require('multer');
 const path = require('path');
-const Loki = require('lokijs');
 const fs = require('fs');
 const { authenticate } = require('../middleware/authenticate');
-const { upload, db ,UPLOAD_PATH} = require('../configs/multer.config');
+const { upload, db, UPLOAD_PATH } = require('../configs/multer.config');
+const mongoose = require('../db/mongoose');
 
 const loadCollection = function (colName, db) {
     return new Promise(resolve => {
@@ -17,7 +15,7 @@ const loadCollection = function (colName, db) {
     });
 }
 
-router.post('/image', upload.single('avatar'), (req, res) => {
+router.post('/image', authenticate, upload.single('avatar'), (req, res) => {
     loadCollection('images', db).then((collection) => {
         const data = collection.insert(req.file);
         db.saveDatabase();
@@ -26,7 +24,7 @@ router.post('/image', upload.single('avatar'), (req, res) => {
 })
 
 //upload multi-images
-router.post('/images', upload.array('photos', 12), (req, res) => {
+router.post('/images', authenticate, upload.array('photos', 12), (req, res) => {
     loadCollection('images', db).then((col) => {
         let data = [].concat(col.insert(req.files));
         db.saveDatabase();
@@ -35,15 +33,15 @@ router.post('/images', upload.array('photos', 12), (req, res) => {
 })
 
 //get all images
-router.get('/images', (req, res) => {
+router.get('/images', authenticate, (req, res) => {
     loadCollection('images', db).then((col) => {
         res.send(col.data);
     }).catch((err) => res.sendStatus(400).send(err));
 })
 
 //get image by id
-router.get('/images/:id', (req, res) => {
-    loadCollection('images', db).then((col) =>{
+router.get('/images/:id', authenticate, (req, res) => {
+    loadCollection('images', db).then((col) => {
         const result = col.get(req.params.id);
         if (!result) {
             return res.sendStatus(404);
@@ -52,6 +50,6 @@ router.get('/images/:id', (req, res) => {
         fs.createReadStream(path.join(UPLOAD_PATH, result.filename)).pipe(res);
     }).catch((e) => {
         res.sendStatus(400).send(e);
-    });  
+    });
 })
 module.exports = router;

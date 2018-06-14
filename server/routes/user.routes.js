@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
 const { User } = require('../models/user');
 const _ = require('lodash');
 const { authenticate } = require('../middleware/authenticate');
+const mongoose = require('../db/mongoose');
 
 //POST /users
 router.post('/', (req, res) => {
