@@ -11,12 +11,7 @@ const imageFilter = function (req, file, cb) {
     }
     cb(null, true);
 };
-const MIME_TYPE_MAP = {
-    "image/png": "png",
-    "image/jpeg": "jpg",
-    "image/jpg": "jpg",
-    "image/gif": "gif"
-  };
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, `${UPLOAD_PATH}/`)

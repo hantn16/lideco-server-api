@@ -16,11 +16,13 @@ const loadCollection = function (colName, db) {
 }
 
 router.post('/image', authenticate, upload.single('avatar'), (req, res) => {
-    loadCollection('images', db).then((collection) => {
-        const data = collection.insert(req.file);
-        db.saveDatabase();
-        res.send({ id: data.$loki, filename: data.filename, originalname: data.originalname });
-    }).catch((e) => { res.sendStatus(400).send(e); });
+    loadCollection('images', db)
+        .then((collection) => {
+            console.log(req.file);
+            const data = collection.insert(req.file);
+            db.saveDatabase();
+            res.send({ id: data.$loki, filename: data.filename, originalname: data.originalname });
+        }).catch((e) => { res.sendStatus(400).send(e); });
 })
 
 //upload multi-images
@@ -38,6 +40,17 @@ router.get('/images', authenticate, (req, res) => {
         res.send(col.data);
     }).catch((err) => res.sendStatus(400).send(err));
 })
+router.get('/image/:id', authenticate, (req, res) => {
+    loadCollection('images', db).then((col) => {
+        const result = col.get(req.params.id);
+        if (!result) {
+            return res.sendStatus(404);
+        };
+        res.send(result);
+    }).catch((e) => {
+        res.sendStatus(400).send(e);
+    });
+});
 
 //get image by id
 router.get('/images/:id', authenticate, (req, res) => {
